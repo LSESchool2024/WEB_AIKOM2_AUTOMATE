@@ -1,7 +1,9 @@
 package com.aikom.pages;
 
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Step;
+import org.testng.Assert;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -49,6 +51,20 @@ public class MainPageAikom {
     @Step("Open 'Доступні послуги' from left menu")
     public MainPageAikom openAvailableServices() {
         availableServicesLink.shouldBe(visible, enabled).click();
+        return this;
+    }
+
+    /**
+     * Clicks on left menu item "Доступні послуги" and verifies that navigation happened
+     * to the process list page regardless of domain (dev/stage/prod).
+     */
+    @Step("Click 'Доступні послуги' in left menu and verify navigation to /officer/process-list")
+    public MainPageAikom clickAvailableServicesMenu() {
+        availableServicesLink.shouldBe(visible, enabled).click();
+        // Domain-agnostic URL verification: ends with /officer/process-list (may include query or trailing slash)
+        String url = WebDriverRunner.url();
+        boolean ok = url.endsWith("/officer/process-list") || url.matches("https?://[^/]+/officer/process-list(?:[/?].*)?$");
+        Assert.assertTrue(ok, "Expected to navigate to '/officer/process-list', but actual URL is: " + url);
         return this;
     }
 }

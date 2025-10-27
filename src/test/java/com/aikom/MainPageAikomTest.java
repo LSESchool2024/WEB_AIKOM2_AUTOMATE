@@ -25,4 +25,16 @@ public class MainPageAikomTest extends BaseTest {
                 .verifyMenuHomePresent()
                 .verifyAvailableServicesMenuPresent();
     }
+
+    /**
+     * Перевірка переходу за пунктом меню "Доступні послуги" на сторінку списку послуг.
+     */
+    @Test(description = "Клік по 'Доступні послуги' та перевірка навігації на /officer/process-list")
+    public void testClickAvailableServicesFromMenu() {
+        new AikomLoginPage()
+                .FirstAuthorizationOnAikom();
+
+        new MainPageAikom()
+                .clickAvailableServicesMenu();
+    }
 }

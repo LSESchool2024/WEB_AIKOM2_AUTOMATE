@@ -10,7 +10,7 @@ public class BaseTest {
     @BeforeSuite(alwaysRun = true)
     public void setUp() {
         Configuration.browser = "chrome";
-        Configuration.browserSize = "1920x1080";
+        Configuration.browserSize = "1366x768";
         Configuration.timeout = 10000;
         Configuration.headless = false; // Set to true for CI/CD pipeline
     }

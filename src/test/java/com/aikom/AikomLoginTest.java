@@ -1,12 +1,7 @@
 package com.aikom;
 
-import com.codeborne.selenide.ex.ElementNotFound;
+import com.aikom.pages.AikomLoginPage;
 import org.testng.annotations.Test;
-
-import java.time.Duration;
-
-import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selenide.*;
 
 public class AikomLoginTest extends BaseTest {
 
@@ -15,18 +10,23 @@ public class AikomLoginTest extends BaseTest {
      */
     @Test
     public void testAikomLoginPage() {
-        // Open the Aikom login page
-        open("https://cabinet.aikom.gov.ua/officer/login");
+        AikomLoginPage loginPage = new AikomLoginPage()
+                .open()
+                .verifyPageTitle()
+                .clickLoginButton()
+                .verifyAuthTitle()
+                .verifyPersonalKeyTitle()
+                .verifyPersonalKeyFileSection()
+                .verifyPasswordSection();
+    }
 
-        // Verify the page is loaded by checking the title and login form
-        // Header with the title "Кабінет користувача" should be present
-        $("h1").shouldHave(text("Кабінет користувача"));
-        // Click the "Увійти до кабінету" button
-        $("button[data-xpath='loginButton']").click();
-
-        // Verify that the authentication title is present
-        // Title should be "Будь ласка, автентифікуйтесь"
-        $("h1.MuiTypography-root").shouldHave(text("Будь ласка, автентифікуйтесь"));
+    /**
+     * Tests the functionality of uploading a secret key file
+     */
+    @Test
+    public void testSecretKeyFileUpload() {
+        AikomLoginPage loginPage = new AikomLoginPage()
+                .FirstAuthorizationOnAikom();
 
     }
 }

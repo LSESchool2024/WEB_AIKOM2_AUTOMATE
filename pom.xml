@@ -38,6 +38,14 @@
             <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
+        
+        <!-- Allure TestNG integration for @Step annotations and reporting -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>2.29.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -50,6 +58,11 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <systemPropertyVariables>
+                        <!-- Map env vars to system properties used by tests -->
+                        <aikom.keyFile>${env.AIKOM_KEY_FILE}</aikom.keyFile>
+                        <aikom.keyPassword>${env.AIKOM_KEY_PASSWORD}</aikom.keyPassword>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>

@@ -35,3 +35,16 @@ build/reports/tests/
 *.log
 *.png
 *.html
+/allure-results/*.json
+
+# Secrets (do not commit)
+src/test/resources/secret_key/
+**/*.jks
+**/*.p12
+**/*.pem
+**/*.key
+**/*.crt
+
+# Local developer-only secrets mapping (ignored)
+local.aikom.properties
+.aikom/

@@ -206,13 +206,35 @@ public class AikomLoginPage {
      *
      * @return current page object for method chaining
      */
+    /**
+     * Refreshes the sign widget iframe by switching back to default content and then back to the iframe
+     * @return current page object for method chaining
+     */
+    public AikomLoginPage refreshSignWidgetIframe() {
+        // Switch back to default content
+        switchTo().defaultContent();
+        
+        // Wait for the iframe to be present and switch to it
+        signWidgetIframe.shouldBe(visible, Duration.ofSeconds(10));
+        switchTo().frame(signWidgetIframe);
+        
+        return this;
+    }
+    
+    /**
+     * Clicks the 'Read' button to process the key file
+     * @return current page object for method chaining
+     */
     public AikomLoginPage clickReadButton() {
-        return withInIframe(() -> {
+        withInIframe(() -> {
             readButton
                     .shouldBe(visible, enabled)
                     .click();
-            return this;
+            return null;
         });
+        
+        // After clicking Read, refresh the iframe to handle any updates
+        return refreshSignWidgetIframe();
     }
 
     /**
@@ -278,5 +300,21 @@ public class AikomLoginPage {
     @FunctionalInterface
     private interface IframeAction<T> {
         T execute();
+    }
+
+    /**
+     * Verifies that the key file was successfully processed by checking for the login submit button
+     * which should be enabled after successful key processing
+     * 
+     * @return current page object for method chaining
+     */
+    public AikomLoginPage verifyKeyFileProcessed() {
+        return withInIframe(() -> {
+            // After successful key processing, the login submit button should be enabled
+            loginSubmitButton
+                .shouldBe(visible, Duration.ofSeconds(10))
+                .shouldBe(enabled);
+            return this;
+        });
     }
 }

@@ -35,3 +35,4 @@ build/reports/tests/
 *.log
 *.png
 *.html
+/allure-results/*.json

@@ -4,6 +4,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 
 import java.time.Duration;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -30,7 +31,7 @@ public class AikomLoginPage {
     private final SelenideElement fileTextField = $("input[readonly]");
     private final SelenideElement caSelect = $("select#pkCASelect");
     private final SelenideElement readButton = $("div#pkReadFileButton");
-    private final SelenideElement loginSubmitButton = $("button[type='submit']");
+    private final SelenideElement loginSubmitButton = $("button[data-xpath='signButton']");
 
     // Login method selectors
     // Try to find the certificate login button with different possible selectors
@@ -232,9 +233,9 @@ public class AikomLoginPage {
                     .click();
             return null;
         });
-        
-        // After clicking Read, refresh the iframe to handle any updates
-        return refreshSignWidgetIframe();
+        // After clicking Read, switch back to default content where the "Увійти" button appears
+        switchTo().defaultContent();
+        return this;
     }
 
     /**
@@ -243,19 +244,17 @@ public class AikomLoginPage {
      * @return current page object for method chaining
      */
     public AikomLoginPage clickLoginSubmitButton() {
-        // Check if we're on the Keycloak login page
-        if (keycloakLoginButton.isDisplayed()) {
+        // If Keycloak login form is shown, use it, otherwise click the main-form "Увійти" button
+        if (keycloakLoginButton.exists() && keycloakLoginButton.isDisplayed()) {
             keycloakLoginButton.click();
-        } else {
-            // Fall back to certificate login
-            return withInIframe(() -> {
-                loginSubmitButton
-                        .shouldBe(visible, Duration.ofSeconds(10))
-                        .shouldBe(enabled)
-                        .click();
-                return this;
-            });
+            return this;
         }
+        // Ensure we are in default content (button is outside iframe now)
+        switchTo().defaultContent();
+        loginSubmitButton
+                .shouldBe(visible, Duration.ofSeconds(15))
+                .shouldBe(enabled)
+                .click();
         return this;
     }
 
@@ -309,12 +308,25 @@ public class AikomLoginPage {
      * @return current page object for method chaining
      */
     public AikomLoginPage verifyKeyFileProcessed() {
-        return withInIframe(() -> {
-            // After successful key processing, the login submit button should be enabled
-            loginSubmitButton
-                .shouldBe(visible, Duration.ofSeconds(10))
+        // After successful key processing, the "Увійти" button appears/enables on the main form (outside iframe)
+        switchTo().defaultContent();
+        loginSubmitButton
+                .shouldBe(visible, Duration.ofSeconds(20))
                 .shouldBe(enabled);
-            return this;
-        });
+        return this;
+    }
+
+    @Step("FirstAuthorizationOnAikom")
+    public AikomLoginPage FirstAuthorizationOnAikom() {
+        return this
+                .open()
+                .clickLoginButton()
+                .verifyPersonalKeyTitle()
+                .verifyPersonalKeyFileSection()
+                .uploadKeyFile()
+                .enterDefaultKeyPassword()
+                .clickReadButton()
+                .verifyKeyFileProcessed()
+                .clickLoginSubmitButton();
     }
 }

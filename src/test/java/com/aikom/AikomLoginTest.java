@@ -26,15 +26,7 @@ public class AikomLoginTest extends BaseTest {
     @Test
     public void testSecretKeyFileUpload() {
         AikomLoginPage loginPage = new AikomLoginPage()
-                .open()
-                .clickLoginButton()
-                .verifyPersonalKeyTitle()
-                .verifyPersonalKeyFileSection()  // Verify CA select has default value
-                .uploadKeyFile()
-                .enterDefaultKeyPassword()  // Enter the default key password
-                .clickReadButton()  // Click the 'Read' button to process the key
-                .refreshSignWidgetIframe();  // Refresh the iframe to handle any updates
-
+                .FirstAuthorizationOnAikom();
 
     }
 }

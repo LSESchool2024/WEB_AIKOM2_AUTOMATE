@@ -23,6 +23,13 @@
             <artifactId>selenide</artifactId>
             <version>${selenide.version}</version>
         </dependency>
+        
+        <!-- Selenide Proxy -->
+        <dependency>
+            <groupId>com.codeborne</groupId>
+            <artifactId>selenide-proxy</artifactId>
+            <version>${selenide.version}</version>
+        </dependency>
 
         <!-- TestNG -->
         <dependency>

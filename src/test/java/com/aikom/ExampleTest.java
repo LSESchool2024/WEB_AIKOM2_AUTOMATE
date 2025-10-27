@@ -1,22 +1,26 @@
 package com.aikom;
 
+import com.aikom.pages.WebFormPage;
 import org.testng.annotations.Test;
 
-import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selenide.*;
+import static org.testng.Assert.*;
 
 public class ExampleTest extends BaseTest {
 
     @Test
     public void testDemoGoogleSearch() {
-        // Using a demo page that's better suited for testing
-        open("https://www.selenium.dev/selenium/web/web-form.html");
+        // Initialize page object and open the page
+        WebFormPage webFormPage = new WebFormPage().open();
+        
+        // Verify page is opened
+        assertTrue(webFormPage.isPageOpened(), "Web form page should be opened");
         
         // Fill in the form
-        $("#my-text-id").setValue("Test Input");
-        $("button[type='submit']").click();
+        webFormPage.enterText("Test Input")
+                  .submitForm();
         
         // Verify the success message
-        $("h1").shouldHave(text("Form submitted"));
+        assertEquals(webFormPage.getSuccessMessage(), "Form submitted", 
+                   "Success message should be displayed after form submission");
     }
 }

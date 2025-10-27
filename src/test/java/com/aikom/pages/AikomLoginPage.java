@@ -58,7 +58,47 @@ public class AikomLoginPage {
 
     // Page URL
     private static final String PAGE_URL = "https://cabinet.aikom.gov.ua/officer/login";
-    private static final String KEY_FILE_PATH = "key_1303348978_71256677.jks";
+
+    // Secrets resolution: read from system properties or environment variables with optional local properties fallback
+    private static final java.util.Properties LOCAL_PROPS = loadLocalProps();
+
+    private static java.util.Properties loadLocalProps() {
+        java.util.Properties props = new java.util.Properties();
+        java.nio.file.Path projectLocal = java.nio.file.Paths.get("local.aikom.properties");
+        java.nio.file.Path userHomeLocal = java.nio.file.Paths.get(System.getProperty("user.home"), ".aikom", "local.properties");
+        for (java.nio.file.Path p : new java.nio.file.Path[]{projectLocal, userHomeLocal}) {
+            try {
+                if (java.nio.file.Files.exists(p)) {
+                    try (java.io.InputStream in = java.nio.file.Files.newInputStream(p)) {
+                        props.load(in);
+                    }
+                }
+            } catch (Exception ignored) {
+                // Do not fail on local props issues; they are optional.
+            }
+        }
+        return props;
+    }
+
+    private static java.nio.file.Path resolveKeyPath() {
+        String prop = System.getProperty("aikom.keyFile");
+        if (prop != null && !prop.isBlank()) return java.nio.file.Paths.get(prop);
+        String env = System.getenv("AIKOM_KEY_FILE");
+        if (env != null && !env.isBlank()) return java.nio.file.Paths.get(env);
+        String local = LOCAL_PROPS.getProperty("aikom.keyFile");
+        if (local != null && !local.isBlank()) return java.nio.file.Paths.get(local);
+        throw new IllegalStateException("Path to key file is not provided. Set -Daikom.keyFile or AIKOM_KEY_FILE or define aikom.keyFile in local.aikom.properties");
+    }
+
+    private static String resolveKeyPassword() {
+        String prop = System.getProperty("aikom.keyPassword");
+        if (prop != null && !prop.isBlank()) return prop;
+        String env = System.getenv("AIKOM_KEY_PASSWORD");
+        if (env != null && !env.isBlank()) return env;
+        String local = LOCAL_PROPS.getProperty("aikom.keyPassword");
+        if (local != null && !local.isBlank()) return local;
+        throw new IllegalStateException("Key password is not provided. Set -Daikom.keyPassword or AIKOM_KEY_PASSWORD or define aikom.keyPassword in local.aikom.properties");
+    }
 
     // Page actions
     public AikomLoginPage open() {
@@ -163,11 +203,11 @@ public class AikomLoginPage {
      */
     public AikomLoginPage uploadKeyFile() {
         return withInIframe(() -> {
-            // Get the absolute path to the key file
-            String absolutePath = new java.io.File(KEY_FILE_PATH).getAbsolutePath();
+            // Resolve key file path from system properties or environment variables
+            java.io.File keyFile = resolveKeyPath().toFile();
 
             // Upload the file using the hidden input
-            fileInput.uploadFromClasspath("secret_key/" + new java.io.File(KEY_FILE_PATH).getName());
+            fileInput.uploadFile(keyFile);
 
             // Verify the file was selected (the text field should contain the file name)
             fileTextField
@@ -198,8 +238,8 @@ public class AikomLoginPage {
      *
      * @return current page object for method chaining
      */
-    public AikomLoginPage enterDefaultKeyPassword() {
-        return enterKeyPassword("Golkiper2025");
+    public AikomLoginPage enterResolvedKeyPassword() {
+        return enterKeyPassword(resolveKeyPassword());
     }
 
     /**
@@ -324,7 +364,7 @@ public class AikomLoginPage {
                 .verifyPersonalKeyTitle()
                 .verifyPersonalKeyFileSection()
                 .uploadKeyFile()
-                .enterDefaultKeyPassword()
+                .enterResolvedKeyPassword()
                 .clickReadButton()
                 .verifyKeyFileProcessed()
                 .clickLoginSubmitButton();

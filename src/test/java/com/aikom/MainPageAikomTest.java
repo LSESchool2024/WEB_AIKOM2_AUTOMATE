@@ -35,6 +35,6 @@ public class MainPageAikomTest extends BaseTest {
                 .FirstAuthorizationOnAikom();
 
         new MainPageAikom()
-                .clickAvailableServicesMenu();
+                .verifyElementsAndClickAvailableServices();
     }
 }

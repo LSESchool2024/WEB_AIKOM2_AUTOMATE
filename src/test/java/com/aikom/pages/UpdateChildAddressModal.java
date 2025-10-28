@@ -137,4 +137,21 @@ public class UpdateChildAddressModal {
         // повертаємось на сторінку профілю
         return new UpdateChildProfilePage();
     }
+
+    @Step("Сценарій: .verifyAddButtonPresent() → .clickAddButton() → .verifyOpened() → .verifyRealStateInputPresent() → .typeRealState({countryValue}) → .openRealStateDropdown() → .selectRealStateOption({countryValue}) → .verifyRealStateValue({countryValue}) → .scrollToSaveButton() → .verifySaveButtonEnabled() → .clickSaveButton() → .verifyAddButtonPresent()")
+    public UpdateChildProfilePage completeAddCountryFlow(String countryValue) {
+        return new UpdateChildProfilePage()
+                .verifyAddButtonPresent()
+                .clickAddButton()
+                .verifyOpened()
+                .verifyRealStateInputPresent()
+                .typeRealState(countryValue)
+                .openRealStateDropdown()
+                .selectRealStateOption(countryValue)
+                .verifyRealStateValue(countryValue)
+                .scrollToSaveButton()
+                .verifySaveButtonEnabled()
+                .clickSaveButton()
+                .verifyAddButtonPresent();
+    }
 }

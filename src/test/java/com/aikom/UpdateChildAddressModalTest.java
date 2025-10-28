@@ -109,18 +109,6 @@ public class UpdateChildAddressModalTest extends BaseTest {
                 .verifyHeader()
                 .searchAndOpenProfileChild(FULL_NAME_INPUT);
 
-        new UpdateChildProfilePage()
-                .verifyAddButtonPresent()
-                .clickAddButton()
-                .verifyOpened()
-                .verifyRealStateInputPresent()
-                .typeRealState(countryValue)
-                .openRealStateDropdown()
-                .selectRealStateOption(countryValue)
-                .verifyRealStateValue(countryValue)
-                .scrollToSaveButton()
-                .verifySaveButtonEnabled()
-                .clickSaveButton()
-                .verifyAddButtonPresent();
+        new UpdateChildAddressModal().completeAddCountryFlow(countryValue);
     }
 }

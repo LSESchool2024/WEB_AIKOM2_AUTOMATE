@@ -63,14 +63,14 @@ public class UpdateChildProfilePage {
     }
 
     @Step("Натиснути кнопку 'Далі' на сторінці оновлення профілю дитини")
-    public UpdateChildProfilePage clickNextButton() {
+    public UpdateChildProfileNextPage clickNextButton() {
         // Переконуємось, що кнопка доступна для кліку
         verifyNextButtonEnabled();
         nextButton.scrollIntoView(true).click();
         // Після кліку можливі лоадери — чекаємо їх зникнення
         if (componentLoader.exists()) componentLoader.shouldBe(hidden);
         if (pageLoader.exists()) pageLoader.shouldBe(hidden);
-        // Якщо відбувається навігація на іншу сторінку, цей метод можна оновити, щоб повертати відповідний PageObject
-        return this;
+        // Повертаємо наступну сторінку та валідуємо, що вона відкрита
+        return new UpdateChildProfileNextPage().verifyOpened();
     }
 }

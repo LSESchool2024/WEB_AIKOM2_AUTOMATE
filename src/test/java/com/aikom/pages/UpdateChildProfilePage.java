@@ -41,12 +41,12 @@ public class UpdateChildProfilePage {
     }
 
     @Step("Клік по кнопці 'Додати' на сторінці оновлення профілю дитини")
-    public UpdateChildProfilePage clickAddButton() {
+    public UpdateChildAddressModal clickAddButton() {
         verifyAddButtonPresent();
         addButton.click();
-        // Після кліку може з'явитись форма/діалог додавання адреси — дочекаємось приховування лоадера, якщо є
+        // Після кліку має відкритися модальне вікно "Внести дані" — дочекаємось його появи
         if (componentLoader.exists()) componentLoader.shouldBe(hidden);
         if (pageLoader.exists()) pageLoader.shouldBe(hidden);
-        return this;
+        return new UpdateChildAddressModal().verifyOpened();
     }
 }

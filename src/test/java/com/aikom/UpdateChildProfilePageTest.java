@@ -56,4 +56,34 @@ public class UpdateChildProfilePageTest extends BaseTest {
                 .clickAddButton();
         // Подальші перевірки (поява форми/діалогу) можуть бути додані окремо за потреби
     }
+
+    @Test(description = "Flow: після збереження країни натиснути кнопку 'Далі' (clickNextButton())")
+    public void testClickNextButton() {
+        final String countryValue = "Україна";
+
+        // Login
+        new AikomLoginPage()
+                .FirstAuthorizationOnAikom();
+
+        // Navigate to the service
+        new MainPageAikom()
+                .verifyElementsAndClickAvailableServices();
+
+        // Open search page for the service and select a child
+        SearchChildInRegistryPage searchPage = new AvailableServicesPage()
+                .openUpdateChildProfileServiceViaStudentsInfo();
+
+        searchPage
+                .verifyHeader()
+                .searchAndOpenProfileChild(FULL_NAME_INPUT); // navigates to UpdateChildProfilePage
+
+        // Complete modal flow to add country and return to UpdateChildProfilePage
+        new com.aikom.pages.UpdateChildAddressModal()
+                .completeAddCountryFlow(countryValue)
+                .verifyNextButtonEnabled()
+                .clickNextButton();
+        // If navigation happens to a specific next page, replace the return type and add verifications here.
+    }
+
+
 }

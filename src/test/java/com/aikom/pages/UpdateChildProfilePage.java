@@ -26,6 +26,11 @@ public class UpdateChildProfilePage {
     // Markup example: <button ...><div .../> <p ...>Додати</p></button>
     private final SelenideElement addButton = $x("//button[.//p[normalize-space()='Додати'] or normalize-space()='Додати']");
 
+    // The "Далі" (Next) button that becomes enabled after saving in the modal
+    // Example markup from description:
+    // <button lang="uk" class="btn btn-primary btn-md bootstrapFormStyles mdtuddm-button-primary" type="submit" name="data[submit]" ref="button">Далі</button>
+    private final SelenideElement nextButton = $x("//button[@name='data[submit]' and normalize-space()='Далі']");
+
     private void waitUntilPageReady() {
         if (componentLoader.exists()) componentLoader.shouldBe(hidden);
         if (pageLoader.exists()) pageLoader.shouldBe(hidden);
@@ -48,5 +53,24 @@ public class UpdateChildProfilePage {
         if (componentLoader.exists()) componentLoader.shouldBe(hidden);
         if (pageLoader.exists()) pageLoader.shouldBe(hidden);
         return new UpdateChildAddressModal().verifyOpened();
+    }
+
+    @Step("Перевірити, що кнопка 'Далі' присутня та активна")
+    public UpdateChildProfilePage verifyNextButtonEnabled() {
+        waitUntilPageReady();
+        nextButton.should(exist).shouldBe(visible, enabled).shouldHave(text("Далі"));
+        return this;
+    }
+
+    @Step("Натиснути кнопку 'Далі' на сторінці оновлення профілю дитини")
+    public UpdateChildProfilePage clickNextButton() {
+        // Переконуємось, що кнопка доступна для кліку
+        verifyNextButtonEnabled();
+        nextButton.scrollIntoView(true).click();
+        // Після кліку можливі лоадери — чекаємо їх зникнення
+        if (componentLoader.exists()) componentLoader.shouldBe(hidden);
+        if (pageLoader.exists()) pageLoader.shouldBe(hidden);
+        // Якщо відбувається навігація на іншу сторінку, цей метод можна оновити, щоб повертати відповідний PageObject
+        return this;
     }
 }

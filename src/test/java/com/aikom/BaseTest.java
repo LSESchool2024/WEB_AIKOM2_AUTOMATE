@@ -12,7 +12,7 @@ public class BaseTest {
     public void setUp() {
         Configuration.browser = "chrome";
         Configuration.browserSize = "1366x768";
-        Configuration.timeout = 30000;
+        Configuration.timeout = 15000;
         Configuration.headless = false; // Set to true for CI/CD pipeline
         // Configure file download settings - using FOLDER mode instead of PROXY
         Configuration.fileDownload = FileDownloadMode.FOLDER;

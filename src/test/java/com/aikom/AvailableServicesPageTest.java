@@ -1,0 +1,53 @@
+package com.aikom;
+
+import com.aikom.pages.AikomLoginPage;
+import com.aikom.pages.MainPageAikom;
+import com.aikom.pages.AvailableServicesPage;
+import org.testng.annotations.Test;
+
+import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Condition.*;
+
+/**
+ * UI tests for the "Доступні послуги" page.
+ */
+public class AvailableServicesPageTest extends BaseTest {
+
+    /**
+     * Після виконання кроку verifyElementsAndClickAvailableServices() відкривається сторінка "Доступні послуги".
+     * Тут перевіряємо наявність ключових елементів, наданих у вимогах:
+     * - Заголовок h1 "Доступні послуги"
+     * - Картка групи "Інформація про здобувачів освіти" з назвою та стрілкою
+     * - Картка групи "Інформація про працівників" з назвою та стрілкою
+     */
+    @Test(description = "Перевірка елементів сторінки 'Доступні послуги'")
+    public void testAvailableServicesPageElements() {
+        new AikomLoginPage()
+                .FirstAuthorizationOnAikom();
+
+        new MainPageAikom()
+                .verifyElementsAndClickAvailableServices();
+
+        new AvailableServicesPage()
+                .verifyAllElements();
+    }
+
+    /**
+     * Натискання на картку "Інформація про здобувачів освіти".
+     * Перевірка полягає у відсутності помилки під час кліку ( smoke-click ).
+     */
+    @Test(description = "Клік по картці 'Інформація про здобувачів освіти' на сторінці 'Доступні послуги'")
+    public void testClickStudentsInfoCard() {
+        new AikomLoginPage()
+                .FirstAuthorizationOnAikom();
+
+        new MainPageAikom()
+                .verifyElementsAndClickAvailableServices();
+
+        new AvailableServicesPage()
+                .verifyHeader()
+                .verifyStudentsInfoCard()
+                .clickStudentsInfoCard();
+
+    }
+}

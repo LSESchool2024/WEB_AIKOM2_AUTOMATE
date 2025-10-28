@@ -31,6 +31,8 @@ public class AvailableServicesPage {
     private static final String STUDENTS_TITLE = "Інформація про здобувачів освіти";
     private static final String EMPLOYEES_TITLE = "Інформація про працівників";
 
+    // Services titles inside "Інформація про здобувачів освіти"
+    private static final String SERVICE_UPDATE_CHILD_PROFILE = "Оновлення освітнього профілю дитини";
 
     // Generic locator helpers for a service card by its title text
     private SelenideElement cardByTitle(String title) {
@@ -39,7 +41,6 @@ public class AvailableServicesPage {
         // Robust: find the nearest card container directly via XPath (avoid jQuery `closest` translation issues)
         return titleP.$x("ancestor::div[contains(@class,'MuiBox-root')][1]");
     }
-
 
     private SelenideElement cardArrow(SelenideElement card) {
         // Arrow is a direct child of the card container
@@ -101,6 +102,14 @@ public class AvailableServicesPage {
             card.scrollIntoView(true).click();
         }
         return this; // За потреби можна повернути інший Page Object, коли стане відомий таргет
+    }
+
+    @Step("Перевірити наявність послуги: 'Оновлення освітнього профілю дитини'")
+    public AvailableServicesPage verifyUpdateChildProfileServicePresent() {
+        waitUntilPageReady();
+        // Service item is rendered as <p> with exact text
+        $x("//p[normalize-space()='" + SERVICE_UPDATE_CHILD_PROFILE + "']").shouldBe(visible);
+        return this;
     }
 
 }

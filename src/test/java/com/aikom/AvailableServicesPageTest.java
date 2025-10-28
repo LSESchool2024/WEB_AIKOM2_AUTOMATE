@@ -6,6 +6,8 @@ import com.aikom.pages.AvailableServicesPage;
 import org.testng.annotations.Test;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.title;
 import static com.codeborne.selenide.Condition.*;
 
 /**
@@ -48,6 +50,26 @@ public class AvailableServicesPageTest extends BaseTest {
                 .verifyHeader()
                 .verifyStudentsInfoCard()
                 .clickStudentsInfoCard();
-
     }
+
+    /**
+     * Після кліку по групі "Інформація про здобувачів освіти" повинні з'явитися послуги цієї групи.
+     * Перевіряємо наявність елемента:
+     * "Оновлення освітнього профілю дитини"
+     */
+    @Test(description = "Поява послуг після кліку по групі 'Інформація про здобувачів освіти'")
+    public void testStudentsServicesListContainsUpdateChildProfile() {
+        new AikomLoginPage()
+                .FirstAuthorizationOnAikom();
+
+        new MainPageAikom()
+                .verifyElementsAndClickAvailableServices();
+
+        new AvailableServicesPage()
+                .verifyHeader()
+                .verifyStudentsInfoCard()
+                .clickStudentsInfoCard()
+                .verifyUpdateChildProfileServicePresent();
+    }
+
 }

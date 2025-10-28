@@ -112,4 +112,21 @@ public class AvailableServicesPage {
         return this;
     }
 
+    @Step("Клік по послузі: 'Оновлення освітнього профілю дитини'")
+    public AvailableServicesPage clickUpdateChildProfileService() {
+        waitUntilPageReady();
+        SelenideElement service = $x("//p[normalize-space()='" + SERVICE_UPDATE_CHILD_PROFILE + "']").shouldBe(visible);
+        service.scrollIntoView(true).click();
+        return this; // За потреби змінити повернення на конкретний Page Object цільової сторінки
+    }
+
+    @Step("Комплексний крок: Відкрити послугу 'Оновлення освітнього профілю дитини' через групу 'Інформація про здобувачів освіти'")
+    public AvailableServicesPage openUpdateChildProfileServiceViaStudentsInfo() {
+        return this
+                .verifyHeader()
+                .verifyStudentsInfoCard()
+                .clickStudentsInfoCard()
+                .verifyUpdateChildProfileServicePresent()
+                .clickUpdateChildProfileService();
+    }
 }

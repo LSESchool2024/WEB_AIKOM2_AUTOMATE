@@ -70,6 +70,23 @@ public class AvailableServicesPageTest extends BaseTest {
                 .verifyStudentsInfoCard()
                 .clickStudentsInfoCard()
                 .verifyUpdateChildProfileServicePresent();
+        System.out.println("End test");
+    }
+
+    /**
+     * Перевірка окремого методу кліку по елементу
+     * 'Оновлення освітнього профілю дитини' — smoke‑клік без перевірки навігації.
+     */
+    @Test(description = "Клік по послузі 'Оновлення освітнього профілю дитини'")
+    public void testClickUpdateChildProfileService() {
+        new AikomLoginPage()
+                .FirstAuthorizationOnAikom();
+
+        new MainPageAikom()
+                .verifyElementsAndClickAvailableServices();
+
+        new AvailableServicesPage()
+                .openUpdateChildProfileServiceViaStudentsInfo();
     }
 
 }

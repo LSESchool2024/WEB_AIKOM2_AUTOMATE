@@ -66,4 +66,29 @@ public class SearchChildInRegistryPage {
                 .verifyLastNameLabelAndInput()
                 .verifySearchButtonDisabled();
     }
+
+    /**
+     * @param raw  pattern string:  Марчук Макар Геннадійович, 3-3-Є
+     * @return
+     */
+    @Step("Ввести у поле прізвища перше слово з рядка: {raw}")
+    public SearchChildInRegistryPage enterLastNameFromFullString(String raw) {
+        waitUntilPageReady();
+        String input = raw == null ? "" : raw.trim();
+        String surname;
+        int spaceIdx = input.indexOf(' ');
+        if (spaceIdx > 0) {
+            surname = input.substring(0, spaceIdx);
+        } else {
+            surname = input; // якщо пробілів немає — беремо увесь рядок
+        }
+        lastNameInput.should(exist).shouldBe(visible, enabled).setValue(surname);
+        return this;
+    }
+
+    @Step("Перевірити значення у полі прізвища: {expected}")
+    public SearchChildInRegistryPage verifyLastNameValue(String expected) {
+        lastNameInput.shouldHave(value(expected));
+        return this;
+    }
 }
